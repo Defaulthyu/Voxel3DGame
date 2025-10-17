@@ -27,7 +27,7 @@ public class PlayerController : MonoBehaviour
     //현재 상태
     private float currentSpeed;
     private bool isAttacking = false;           //공격중인지 체크
-    //private bool isLanding = false;             //착지 중인지 확인
+    private bool isLanding = false;             //착지 중인지 확인
     private float landingTimer;                 //착지 타이머
 
     private Vector3 velocity;
@@ -55,7 +55,7 @@ public class PlayerController : MonoBehaviour
         if (!isUIMode)           //UI 모드가 아닐 때만 플레이어 조작 가능
         {
             CheckGrounded();
-            //HandleLanding();
+            HandleLanding();
             HandleMovement();
             HandleJump();
             HandleAttack();
@@ -77,28 +77,28 @@ public class PlayerController : MonoBehaviour
         {
             velocity.y = -2f;
 
-            ////착지 모션 트리거 및 착지상태 시작
-            //if (!wasGrounded && animator != null)
-            //{
-            //    animator.SetTrigger("LandTrigger");
-            //    isLanding = true;
-            //    landingTimer = landingDuration;
-            //    Debug.Log("착지");
-            //}
+            //착지 모션 트리거 및 착지상태 시작
+            if (!wasGrounded && animator != null)
+            {
+                animator.SetTrigger("LandTrigger");
+                isLanding = true;
+                landingTimer = landingDuration;
+                Debug.Log("착지");
+            }
         }
     }
 
-    //void HandleLanding()
-    //{
-    //    if (isLanding)
-    //    {
-    //        landingTimer -= Time.deltaTime;             //랜딩 타이머 시간 만큼 못움직임
-    //        if (landingTimer <= 0)
-    //        {
-    //            isLanding = false;                      //착지 완료
-    //        }
-    //    }
-    //}
+    void HandleLanding()
+    {
+        if (isLanding)
+        {
+            landingTimer -= Time.deltaTime;             //랜딩 타이머 시간 만큼 못움직임
+            if (landingTimer <= 0)
+            {
+                isLanding = false;                      //착지 완료
+            }
+        }
+    }
 
     void HandleAttack()
     {
@@ -192,8 +192,8 @@ public class PlayerController : MonoBehaviour
         animator.SetBool("isGrounded", isGrounded);
 
         bool isFalling = !isGrounded && velocity.y < -0.1f;                 //캐릭터의 y축 속도가 음수로 넘어가면 떨어지고 있다고 판단
-        //animator.SetBool("isFalling", isFalling);
-        //animator.SetBool("isLanding", isLanding);
+        animator.SetBool("isFalling", isFalling);
+        animator.SetBool("isLanding", isLanding);
 
     }
 

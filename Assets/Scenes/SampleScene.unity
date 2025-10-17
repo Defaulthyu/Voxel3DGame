@@ -328,6 +328,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac0b09e7857660247b1477e93731de29, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!23 &298935703 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -5230070411599705144, guid: 6b5e7f564cf97dd4baa8db41a46c2a90,
+    type: 3}
+  m_PrefabInstance: {fileID: 387963193}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &330585543
 GameObject:
   m_ObjectHideFlags: 0
@@ -390,7 +396,7 @@ Camera:
     height: 1
   near clip plane: 0.1
   far clip plane: 5000
-  field of view: 40
+  field of view: 70
   orthographic: 0
   orthographic size: 10
   m_Depth: -1
@@ -416,8 +422,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 330585543}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.07556496, y: 0.91308653, z: -0.19808838, w: -0.34831598}
-  m_LocalPosition: {x: 3.3301127, y: 3.432, z: 3.7296581}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.6570001, z: 0.01}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -507,7 +513,7 @@ MonoBehaviour:
   m_BlendUpdateMethod: 1
   m_DefaultBlend:
     m_Style: 1
-    m_Time: 2
+    m_Time: 0.3
     m_CustomCurve:
       serializedVersion: 2
       m_Curve: []
@@ -521,6 +527,12 @@ MonoBehaviour:
   m_CameraActivatedEvent:
     m_PersistentCalls:
       m_Calls: []
+--- !u!23 &330872929 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -1768166889284627683, guid: 6b5e7f564cf97dd4baa8db41a46c2a90,
+    type: 3}
+  m_PrefabInstance: {fileID: 387963193}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &387963193
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -740,6 +752,12 @@ MonoBehaviour:
   m_LightCookieSize: {x: 1, y: 1}
   m_LightCookieOffset: {x: 0, y: 0}
   m_SoftShadowQuality: 1
+--- !u!23 &466065515 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 1881940805120537616, guid: 6b5e7f564cf97dd4baa8db41a46c2a90,
+    type: 3}
+  m_PrefabInstance: {fileID: 387963193}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &494389172
 GameObject:
   m_ObjectHideFlags: 0
@@ -771,7 +789,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   thirdPersonCam: {fileID: 1480118558}
   firstPersonCam: {fileID: 2093123696}
-  playerBodyRenderer: {fileID: 0}
+  renderersToHide:
+  - {fileID: 526155321}
+  - {fileID: 1400536440}
+  - {fileID: 706338501}
+  - {fileID: 466065515}
+  - {fileID: 298935703}
+  - {fileID: 330872929}
+  - {fileID: 814676924}
+  - {fileID: 2040104432}
+  - {fileID: 516534553}
 --- !u!4 &494389174
 Transform:
   m_ObjectHideFlags: 0
@@ -787,6 +814,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!23 &516534553 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -105707389390627781, guid: 6b5e7f564cf97dd4baa8db41a46c2a90,
+    type: 3}
+  m_PrefabInstance: {fileID: 387963193}
+  m_PrefabAsset: {fileID: 0}
+--- !u!23 &526155321 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -417170580068145732, guid: 6b5e7f564cf97dd4baa8db41a46c2a90,
+    type: 3}
+  m_PrefabInstance: {fileID: 387963193}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &655601495
 GameObject:
   m_ObjectHideFlags: 3
@@ -914,6 +953,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac0b09e7857660247b1477e93731de29, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!23 &706338501 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -5311505673835253220, guid: 6b5e7f564cf97dd4baa8db41a46c2a90,
+    type: 3}
+  m_PrefabInstance: {fileID: 387963193}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &718026311
 GameObject:
   m_ObjectHideFlags: 3
@@ -993,6 +1038,12 @@ Transform:
   - {fileID: 887273984}
   m_Father: {fileID: 1480118559}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!23 &814676924 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 7822399236620417766, guid: 6b5e7f564cf97dd4baa8db41a46c2a90,
+    type: 3}
+  m_PrefabInstance: {fileID: 387963193}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &815454760
 GameObject:
   m_ObjectHideFlags: 3
@@ -1284,7 +1335,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1391003824}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.0818882, y: 0.9093323, z: -0.21466424, w: -0.34688395}
+  m_LocalRotation: {x: 0.0818882, y: -0.9093323, z: 0.21466425, w: 0.34688395}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -1292,6 +1343,12 @@ Transform:
   - {fileID: 278879583}
   m_Father: {fileID: 1480118559}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!23 &1400536440 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 6688152827161484407, guid: 6b5e7f564cf97dd4baa8db41a46c2a90,
+    type: 3}
+  m_PrefabInstance: {fileID: 387963193}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1468677922
 GameObject:
   m_ObjectHideFlags: 0
@@ -1317,7 +1374,7 @@ Transform:
   m_GameObject: {fileID: 1468677922}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.871, z: 0.1825}
+  m_LocalPosition: {x: 0, y: 0.7358001, z: 0.1825}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1387,7 +1444,7 @@ MonoBehaviour:
     m_DecelTime: 0.1
     m_InputAxisName: Mouse Y
     m_InputAxisValue: 0
-    m_InvertInput: 0
+    m_InvertInput: 1
     m_MinValue: 0
     m_MaxValue: 1
     m_Wrap: 0
@@ -1411,7 +1468,7 @@ MonoBehaviour:
     m_DecelTime: 0.1
     m_InputAxisName: Mouse X
     m_InputAxisValue: 0
-    m_InvertInput: 1
+    m_InvertInput: 0
     m_MinValue: -180
     m_MaxValue: 180
     m_Wrap: 1
@@ -1569,6 +1626,12 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!23 &2040104432 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 3018952252934677550, guid: 6b5e7f564cf97dd4baa8db41a46c2a90,
+    type: 3}
+  m_PrefabInstance: {fileID: 387963193}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2059233223
 GameObject:
   m_ObjectHideFlags: 0
@@ -1705,7 +1768,7 @@ MonoBehaviour:
   m_LookAt: {fileID: 0}
   m_Follow: {fileID: 1468677923}
   m_Lens:
-    FieldOfView: 60.000004
+    FieldOfView: 70
     OrthographicSize: 10
     NearClipPlane: 0.1
     FarClipPlane: 5000
@@ -1732,7 +1795,7 @@ Transform:
   m_GameObject: {fileID: 2093123695}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.8602, z: 0.01}
+  m_LocalPosition: {x: 0, y: 0.725, z: 0.01}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
