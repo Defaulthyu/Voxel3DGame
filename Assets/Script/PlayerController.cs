@@ -80,7 +80,7 @@ public class PlayerController : MonoBehaviour
             //착지 모션 트리거 및 착지상태 시작
             if (!wasGrounded && animator != null)
             {
-                animator.SetTrigger("LandTrigger");
+                //animator.SetTrigger("LandTrigger");
                 isLanding = true;
                 landingTimer = landingDuration;
                 Debug.Log("착지");
@@ -142,7 +142,7 @@ public class PlayerController : MonoBehaviour
 
     void HandleMovement()       //이동 함수 제작
     {
-        if ((isAttacking && !canMoveWhileAttacking)) // || isLanding)                //공격중이거나 착지중일때 움직임 제한
+        if ((isAttacking && !canMoveWhileAttacking) || isLanding)                //공격중이거나 착지중일때 움직임 제한
         {
             currentSpeed = 0;
             return;
