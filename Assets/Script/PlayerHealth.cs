@@ -18,7 +18,7 @@ public class PlayerHealth : MonoBehaviour
     void Start()
     {
         currentHP = maxHP;
-        hpSlider.value = 1f;
+        //hpSlider.value = 1f;
     }
 
     public void TakeDamage(float damage)
