@@ -1,89 +1,187 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    [Header("ÀÌµ¿ ¼³Á¤")]
+    [Header("ì´ë™ ì„¤ì •")]
     public float walkSpeed = 3f;
     public float runSpeed = 6f;
     public float rotationSpeed = 10;
 
-    [Header("Á¡ÇÁ ¼³Á¤")]
+    [Header("ì í”„ ì„¤ì •")]
     public float jumpHeight = 2f;
-    public float gravity = -9.81f;                  //Áß·Â ¼Óµµ Ãß°¡
-    public float landingDuration = 0.3f;            //ÂøÁö ÈÄ ÂøÁö Áö¼Ó ½Ã°£
+    public float gravity = -9.81f;
+    public float landingDuration = 0.3f;
 
-    [Header("°ø°İ ¼³Á¤")]
-    public float attackDuration = 0.8f;             //°ø°İ Áö¼Ó ½Ã°£
-    public bool canMoveWhileAttacking = false;      //°ø°İÁß ÀÌµ¿ °¡´É ¿©ºÎ
+    [Header("ê³µê²© ì„¤ì •")]
+    public bool canMoveWhileAttacking = false;
 
-    [Header("ÄÄÆ÷³ÍÆ®")]
+    [Header("ë¬´ê¸° ì„¤ì •")]
+    public WeaponType currentWeapon = WeaponType.Fist;
+    public enum WeaponType { Fist, Sword, Gun }
+
+    [System.Serializable]
+    public class WeaponData
+    {
+        public WeaponType type;
+        public float attackDuration;
+        public float cooldown;
+        public string attackTriggerName;
+    }
+
+    public List<WeaponData> weaponDataList;
+
+    [Header("ì»´í¬ë„ŒíŠ¸")]
     public Animator animator;
-
     private CharacterController controller;
     private Camera playerCamera;
 
-    //ÇöÀç »óÅÂ
     private float currentSpeed;
-    private bool isAttacking = false;           //°ø°İÁßÀÎÁö Ã¼Å©
-    private bool isLanding = false;             //ÂøÁö ÁßÀÎÁö È®ÀÎ
-    private float landingTimer;                 //ÂøÁö Å¸ÀÌ¸Ó
+    private bool isAttacking = false;
+    private bool isLanding = false;
+    private float landingTimer;
 
     private Vector3 velocity;
     private bool isGrounded;
-    private bool wasGrounded;                   //ÀÌÀü ÇÁ·¹ÀÓ¿¡ ¶¥ÀÌ¾ú´ÂÁö
+    private bool wasGrounded;
     private float attackTimer;
+    private float attackCooldownTimer;
 
-    private bool isUIMode = false;              //UI ¸ğµå ¼³Á¤
+    // ì´ ê´€ë ¨ ë³€ìˆ˜
+    [Header("ì´ ì„¤ì •")]
+    public Transform firePoint;
+    public GameObject bulletPrefab;
+    public int maxAmmo = 10;
+    public int currentAmmo;
+    public float bulletSpeed = 25f;
 
-    // Start is called before the first frame update
+    // ê·¼ì ‘ ë¬´ê¸° ê´€ë ¨
+    [Header("ê·¼ì ‘ ë¬´ê¸° íˆíŠ¸ë°•ìŠ¤")]
+    public Collider fistCollider;
+    public Collider swordCollider;
+
+    public float meleeActiveTime = 0.3f; // íƒ€ê²© íŒì • ìœ ì§€ ì‹œê°„
+
     void Start()
     {
         controller = GetComponent<CharacterController>();
         playerCamera = Camera.main;
+        currentAmmo = maxAmmo;
+
+        // ì½œë¼ì´ë” ì´ˆê¸° ë¹„í™œì„±í™”
+        if (fistCollider) fistCollider.enabled = false;
+        if (swordCollider) swordCollider.enabled = false;
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Tab))
-        {
             ToggleCursorLock();
-        }
 
-        if (!isUIMode)           //UI ¸ğµå°¡ ¾Æ´Ò ¶§¸¸ ÇÃ·¹ÀÌ¾î Á¶ÀÛ °¡´É
+        HandleWeaponSwitch();
+        CheckGrounded();
+        HandleLanding();
+        HandleMovement();
+        HandleJump();
+        HandleAttack();
+        UpdateAnimator();
+
+        if (attackCooldownTimer > 0)
+            attackCooldownTimer -= Time.deltaTime;
+    }
+
+    void HandleWeaponSwitch()
+    {
+        if (Input.GetKeyDown(KeyCode.Alpha1)) currentWeapon = WeaponType.Fist;
+        if (Input.GetKeyDown(KeyCode.Alpha2)) currentWeapon = WeaponType.Sword;
+        if (Input.GetKeyDown(KeyCode.Alpha3)) currentWeapon = WeaponType.Gun;
+    }
+
+    void HandleAttack()
+    {
+        if (isAttacking)
         {
-            CheckGrounded();
-            HandleLanding();
-            HandleMovement();
-            HandleJump();
-            HandleAttack();
-            UpdateAnimator();
+            attackTimer -= Time.deltaTime;
+            if (attackTimer <= 0)
+                isAttacking = false;
+            return;
         }
 
+        if (Input.GetMouseButtonDown(0) && !isAttacking && attackCooldownTimer <= 0)
+        {
+            WeaponData weapon = weaponDataList.Find(w => w.type == currentWeapon);
+            if (weapon == null) return;
+
+            isAttacking = true;
+            attackTimer = weapon.attackDuration;
+            attackCooldownTimer = weapon.cooldown;
+
+            if (currentWeapon == WeaponType.Gun)
+            {
+                TryShootGun(weapon);
+            }
+            else
+            {
+                if (animator != null && !string.IsNullOrEmpty(weapon.attackTriggerName))
+                    animator.SetTrigger(weapon.attackTriggerName);
+
+                //  ê·¼ì ‘ ë¬´ê¸° ê³µê²©
+                if (currentWeapon == WeaponType.Fist)
+                    StartCoroutine(ActivateMeleeHitbox(fistCollider));
+                else if (currentWeapon == WeaponType.Sword)
+                    StartCoroutine(ActivateMeleeHitbox(swordCollider));
+            }
+        }
+    }
+
+    IEnumerator ActivateMeleeHitbox(Collider hitbox)
+    {
+        if (hitbox == null) yield break;
+
+        hitbox.enabled = true;
+        yield return new WaitForSeconds(meleeActiveTime);
+        hitbox.enabled = false;
+    }
+
+    void TryShootGun(WeaponData weapon)
+    {
+        if (currentAmmo <= 0)
+        {
+            Debug.Log("íƒ„í™˜ì´ ì—†ìŠµë‹ˆë‹¤!");
+            return;
+        }
+
+        if (animator != null && !string.IsNullOrEmpty(weapon.attackTriggerName))
+            animator.SetTrigger(weapon.attackTriggerName);
+
+        currentAmmo--;
+        Debug.Log($"ì´ ë°œì‚¬! ë‚¨ì€ íƒ„í™˜: {currentAmmo}");
+
+        StartCoroutine(ShootBullet(0.75f));
+    }
+
+    IEnumerator ShootBullet(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        GameObject bullet = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
+        Rigidbody rb = bullet.GetComponent<Rigidbody>();
+        rb.velocity = firePoint.forward * bulletSpeed;
+        Destroy(bullet, 3f);
     }
 
     void CheckGrounded()
     {
-        //ÀÌÀü »óÅÂ ÀúÀå
         wasGrounded = isGrounded;
-        isGrounded = controller.isGrounded;     //Ä³¸¯ÅÍ ÄÁÆ®·Ñ·¯¿¡¼­ ¹Ş¾Æ¿Â´Ù
-
-        if (!isGrounded && wasGrounded)
-            Debug.Log("¶³¾îÁö±â ½ÃÀÛ");         //¶¥¿¡¼­ ¶³¾îÁ³À»¶§ (Áö±İ ÇÁ·¹ÀÓÀº ¶¥ÀÌ¾Æ´Ï°í ÀÌÀü ÇÁ·¹ÀÓÀº ¶¥)
+        isGrounded = controller.isGrounded;
 
         if (isGrounded && velocity.y < 0)
         {
             velocity.y = -2f;
-
-            //ÂøÁö ¸ğ¼Ç Æ®¸®°Å ¹× ÂøÁö»óÅÂ ½ÃÀÛ
-            if (!wasGrounded && animator != null)
+            if (!wasGrounded)
             {
-                //animator.SetTrigger("LandTrigger");
                 isLanding = true;
                 landingTimer = landingDuration;
-                Debug.Log("ÂøÁö");
             }
         }
     }
@@ -92,130 +190,83 @@ public class PlayerController : MonoBehaviour
     {
         if (isLanding)
         {
-            landingTimer -= Time.deltaTime;             //·£µù Å¸ÀÌ¸Ó ½Ã°£ ¸¸Å­ ¸ø¿òÁ÷ÀÓ
+            landingTimer -= Time.deltaTime;
             if (landingTimer <= 0)
-            {
-                isLanding = false;                      //ÂøÁö ¿Ï·á
-            }
-        }
-    }
-
-    void HandleAttack()
-    {
-        if (isAttacking)                                                 //°ø°İ ÁßÀÏ¶§
-        {
-            attackTimer -= Time.deltaTime;
-            if (attackTimer <= 0)
-            {
-                isAttacking = false;
-            }
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha1) && !isAttacking)            //°ø°İÁßÀÌ ¾Æ´Ò¶§ Å°¸¦ ´©¸£¸é °ø°İ    
-        {
-            isAttacking = true;                                         //°ø°İ Áß Ç¥½Ã
-            attackTimer = attackDuration;                               //Å¸ÀÌ¸Ó ¸®ÇÊ
-
-            if (animator != null)
-            {
-                animator.SetTrigger("attackTrigger");
-            }
+                isLanding = false;
         }
     }
 
     void HandleJump()
     {
-        if (Input.GetButtonDown("Jump") && isGrounded)       //¶¥ À§¿¡ ÀÖÀ»¶§¸¸ Á¡ÇÁ¸¦ ÇÒ ¼ö ÀÖ´Ù
+        if (Input.GetButtonDown("Jump") && isGrounded)
         {
             velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
             if (animator != null)
-            {
                 animator.SetTrigger("jumpTrigger");
-            }
         }
+
         if (!isGrounded)
-        {
             velocity.y += gravity * Time.deltaTime;
-        }
 
         controller.Move(velocity * Time.deltaTime);
     }
 
-    void HandleMovement()       //ÀÌµ¿ ÇÔ¼ö Á¦ÀÛ
+    void HandleMovement()
     {
-        if ((isAttacking && !canMoveWhileAttacking) || isLanding)                //°ø°İÁßÀÌ°Å³ª ÂøÁöÁßÀÏ¶§ ¿òÁ÷ÀÓ Á¦ÇÑ
+        if ((isAttacking && !canMoveWhileAttacking) || isLanding)
         {
             currentSpeed = 0;
             return;
         }
 
         float horizontal = Input.GetAxis("Horizontal");
-        float verical = Input.GetAxis("Vertical");
+        float vertical = Input.GetAxis("Vertical");
 
-        if (horizontal != 0 || verical != 0)        //µÑ Áß¿¡ ÇÏ³ª¶óµµ ÀÔ·ÂÀÌ ÀÖÀ»¶§
+        if (horizontal != 0 || vertical != 0)
         {
-            //Ä«¸Ş¶ó°¡ º¸´Â ¹æÇâÀÌ ¾ÕÂÊÀ¸·Î µÇ°Ô ¼³Á¤
             Vector3 cameraForward = playerCamera.transform.forward;
-            Vector3 CameraRight = playerCamera.transform.right;
+            Vector3 cameraRight = playerCamera.transform.right;
             cameraForward.y = 0;
-            CameraRight.y = 0;
+            cameraRight.y = 0;
             cameraForward.Normalize();
-            CameraRight.Normalize();
+            cameraRight.Normalize();
 
-            Vector3 moveDirection = cameraForward * verical + CameraRight * horizontal;         //ÀÌµ¿ ¹æÇâ ¼³Á¤
+            Vector3 moveDirection = cameraForward * vertical + cameraRight * horizontal;
 
-            if (Input.GetKey(KeyCode.LeftShift))
-            {
-                currentSpeed = runSpeed;
-            }
-            else
-            {
-                currentSpeed = walkSpeed;
-            }
+            currentSpeed = Input.GetKey(KeyCode.LeftShift) ? runSpeed : walkSpeed;
 
-            controller.Move(moveDirection * currentSpeed * Time.deltaTime);     //Ä³¸¯ÅÍ ÄÁÆ®·Ñ·¯ÀÇ ÀÌµ¿ ÀÔ·Â
+            controller.Move(moveDirection * currentSpeed * Time.deltaTime);
 
             Quaternion targetRotation = Quaternion.LookRotation(moveDirection);
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
-
         }
         else
         {
-            currentSpeed = 0;               //ÀÌµ¿ÀÌ ¾Æ´Ò °æ¿ì ½ºÇÇµå 0
+            currentSpeed = 0;
         }
     }
 
     void UpdateAnimator()
     {
-        //ÀüÃ¼ ÃÖ´ë ¼Óµµ (runspeed)¸¦ ±âÁØÀ¸·Î 0~1 °è»ê
         float animatorSpeed = Mathf.Clamp01(currentSpeed / runSpeed);
         animator.SetFloat("Speed", animatorSpeed);
         animator.SetBool("isGrounded", isGrounded);
 
-        bool isFalling = !isGrounded && velocity.y < -0.1f;                 //Ä³¸¯ÅÍÀÇ yÃà ¼Óµµ°¡ À½¼ö·Î ³Ñ¾î°¡¸é ¶³¾îÁö°í ÀÖ´Ù°í ÆÇ´Ü
+        bool isFalling = !isGrounded && velocity.y < -0.1f;
         animator.SetBool("isFalling", isFalling);
         animator.SetBool("isLanding", isLanding);
-
     }
 
-    public void SetCursorLock(bool lockCursor)                              //¸¶¿ì½º ¶ô ¼³Á¤ ÇÔ¼ö
+    public void SetCursorLock(bool lockCursor)
     {
-        if (lockCursor)
-        {
-            Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
-            isUIMode = false;
-        }
-        else
-        {
-            Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = true;
-            isUIMode = true;
-        }
+        Cursor.lockState = lockCursor ? CursorLockMode.Locked : CursorLockMode.None;
+        Cursor.visible = !lockCursor;
     }
+
     public void ToggleCursorLock()
     {
-        bool shuldLock = Cursor.lockState != CursorLockMode.Locked;
-        SetCursorLock(shuldLock);
+        bool shouldLock = Cursor.lockState != CursorLockMode.Locked;
+        SetCursorLock(shouldLock);
     }
 
     public void SetUIMode(bool uiMode)
