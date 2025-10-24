@@ -61,6 +61,8 @@ public class PlayerController : MonoBehaviour
     public Collider swordCollider;
     public float meleeActiveTime = 0.3f;
 
+    public Camera cam;
+
     void Start()
     {
         controller = GetComponent<CharacterController>();
@@ -114,13 +116,14 @@ public class PlayerController : MonoBehaviour
             attackTimer = weapon.attackDuration;
             attackCooldownTimer = weapon.cooldown;
 
-            //  공격 애니메이션 먼저 재생
             if (animator != null && !string.IsNullOrEmpty(weapon.attackTriggerName))
                 animator.SetTrigger(weapon.attackTriggerName);
 
             // 기 타입에 따라 동작 분기
             if (currentWeapon == WeaponType.Gun)
             {
+
+
                 //총은 애니메이션이 재생된 후 일정 시간 뒤에 발사
                 StartCoroutine(ShootGunAfterAnimation(gunFireDelay));
             }
@@ -143,10 +146,16 @@ public class PlayerController : MonoBehaviour
         yield return new WaitForSeconds(delay);
 
         // 총알 생성 시점
-        GameObject bullet = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
-        Rigidbody rb = bullet.GetComponent<Rigidbody>();
-        rb.velocity = firePoint.forward * bulletSpeed;
-        Destroy(bullet, 3f);
+        Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+        Vector3 targetPoint;
+        targetPoint = ray.GetPoint(50f);
+        Vector3 direction = (targetPoint - firePoint.position).normalized;
+        GameObject bullet = Instantiate(bulletPrefab, firePoint.position, Quaternion.LookRotation(direction));
+
+        //GameObject bullet = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
+        //Rigidbody rb = bullet.GetComponent<Rigidbody>();
+        //rb.velocity = firePoint.forward * bulletSpeed;
+        //Destroy(bullet, 3f);
 
         currentAmmo--;
         Debug.Log($"총 발사! 남은 탄환: {currentAmmo}");
@@ -205,7 +214,6 @@ public class PlayerController : MonoBehaviour
 
     void HandleMovement()
     {
-        // 🔹 착지 중에도 이동 가능하도록 수정
         if (isAttacking && !canMoveWhileAttacking)
         {
             currentSpeed = 0;
@@ -230,8 +238,11 @@ public class PlayerController : MonoBehaviour
 
             controller.Move(moveDirection * currentSpeed * Time.deltaTime);
 
-            Quaternion targetRotation = Quaternion.LookRotation(moveDirection);
-            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+            if(!CameraSwitcher.isFirstPerson)
+            {
+                Quaternion targetRotation = Quaternion.LookRotation(moveDirection);
+                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+            }
         }
         else
         {

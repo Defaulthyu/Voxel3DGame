@@ -4,29 +4,29 @@ using Cinemachine;
 public class CameraSwitcher : MonoBehaviour
 {
     public CinemachineFreeLook thirdPersonCam;
-
     public CinemachineVirtualCamera firstPersonCam;
-
     public Renderer[] renderersToHide;
 
-    // 현재 1인칭 상태인지 확인하는 변수
-    private bool isFirstPerson = false;
+    public static bool isFirstPerson = false;
+    public MouseLook mouseLook;
 
-    // 시작할 때 3인칭으로 설정
     void Start()
     {
-        // 처음에는 3인칭이 활성화되도록 우선순위 설정
         thirdPersonCam.Priority = 11;
         firstPersonCam.Priority = 10;
         SetRenderers(true);
+
+        if (mouseLook != null)
+            mouseLook.enabled = false; // 기본은 3인칭
+        else
+            Debug.LogWarning("MouseLook이 연결되지 않았습니다!");
     }
 
     void Update()
     {
-        // V키를 누르면 카메라 상태 전환
         if (Input.GetKeyDown(KeyCode.V))
         {
-            isFirstPerson = !isFirstPerson; // 상태를 반전시킴
+            isFirstPerson = !isFirstPerson;
             SwitchCameraState();
         }
     }
@@ -35,30 +35,27 @@ public class CameraSwitcher : MonoBehaviour
     {
         if (isFirstPerson)
         {
-            // 1인칭 카메라를 활성화 (더 높은 우선순위)
             firstPersonCam.Priority = 11;
             thirdPersonCam.Priority = 10;
             SetRenderers(false);
+            mouseLook.enabled = true;
         }
         else
         {
-            // 3인칭 카메라를 활성화
             thirdPersonCam.Priority = 11;
             firstPersonCam.Priority = 10;
             SetRenderers(true);
+            mouseLook.enabled = false;
         }
     }
 
     void SetRenderers(bool isVisible)
     {
         if (renderersToHide == null) return;
-
         foreach (var renderer in renderersToHide)
         {
             if (renderer != null)
-            {
                 renderer.enabled = isVisible;
-            }
         }
     }
 }

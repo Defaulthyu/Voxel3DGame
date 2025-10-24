@@ -13,6 +13,8 @@ public class MeleeDamage : MonoBehaviour
         if (enemy != null)
         {
             enemy.TakeDamage(damage);
+            Debug.Log("АјАн " + damage);
         }
+
     }
 }
