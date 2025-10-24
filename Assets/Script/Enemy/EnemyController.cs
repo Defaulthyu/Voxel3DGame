@@ -1,111 +1,114 @@
 using UnityEngine;
-using UnityEngine.AI;
 using UnityEngine.UI;
 using System.Collections;
 
 public class EnemyController : MonoBehaviour
 {
-    public float maxHP = 100f;
-    private float currentHP;
-
-    public Slider hpSlider;        // HP 표시용 UI
-    public float detectRange = 10f;
+    [Header("스탯")]
+    public float maxHp = 100f;
+    public float moveSpeed = 2f;
     public float attackRange = 2f;
-    public float attackDamage = 10f;
-    public float attackCooldown = 1.5f;
+    public float attackDelay = 1.5f;
+    public float damage = 10f;
 
-    private Transform player;
-    private NavMeshAgent agent;
-    private Animator animator;
+    [Header("참조")]
+    public Slider hpSlider;
+    public Animator animator;
+    public Transform player;
 
+    private float currentHp;
+    private bool isSpawning = true;
     private bool isAttacking = false;
     private bool isDead = false;
 
     void Start()
     {
-        currentHP = maxHP;
-        hpSlider.maxValue = maxHP;
-        hpSlider.value = currentHP;
+        if (animator == null)
+            animator = GetComponent<Animator>();  // 자동 연결
 
-        player = GameObject.FindGameObjectWithTag("Player").transform;
-        agent = GetComponent<NavMeshAgent>();
-        animator = GetComponentInChildren<Animator>();
+        currentHp = maxHp;
+        hpSlider.maxValue = maxHp;
+        hpSlider.value = currentHp;
 
-        // 스폰 애니메이션
-        animator.SetTrigger("Spawn");
+        animator.SetTrigger("Spawn"); // 스폰 애니메이션 재생
+        StartCoroutine(SpawnRoutine());
+    }
+
+    IEnumerator SpawnRoutine()
+    {
+        // 스폰 애니메이션이 끝날 때까지 기다림 (길이에 맞춰 조정)
+        yield return new WaitForSeconds(2f);
+        isSpawning = false;
     }
 
     void Update()
     {
-        if (isDead) return;
+        if (isDead || isSpawning) return;
         if (player == null) return;
 
         float distance = Vector3.Distance(transform.position, player.position);
 
-        // 플레이어 탐지
-        if (distance <= detectRange)
+        if (distance <= attackRange)
         {
-            agent.isStopped = false;
-            agent.SetDestination(player.position);
-            animator.SetBool("isWalking", true);
-
-            // 공격 범위 안이면 공격
-            if (distance <= attackRange && !isAttacking)
-            {
+            if (!isAttacking)
                 StartCoroutine(AttackRoutine());
-            }
         }
         else
         {
-            animator.SetBool("isWalking", false);
-            agent.isStopped = true;
+            // 플레이어 방향으로 이동
+            Vector3 dir = (player.position - transform.position).normalized;
+            transform.LookAt(new Vector3(player.position.x, transform.position.y, player.position.z));
+            transform.position += dir * moveSpeed * Time.deltaTime;
+
+            animator.SetBool("isWalking", true);
         }
     }
 
     IEnumerator AttackRoutine()
     {
         isAttacking = true;
-        agent.isStopped = true;
-        animator.SetTrigger("Attack");
+        animator.SetBool("isWalking", false);
+        animator.SetTrigger("Attack"); // 공격 애니메이션 재생
 
-        yield return new WaitForSeconds(0.5f); // 공격 타이밍 (애니메이션 맞춰서 조절)
+        //  공격 모션 중간 타이밍에 실제 데미지 판정 (ex. 0.5초 뒤)
+        yield return new WaitForSeconds(0.5f);
 
-        // 플레이어 체력 깎기
-        if (player != null && Vector3.Distance(transform.position, player.position) <= attackRange)
+        if (player != null)
         {
-            PlayerHealth ph = player.GetComponent<PlayerHealth>();
-            if (ph != null)
-                ph.TakeDamage(attackDamage);
+            float dist = Vector3.Distance(transform.position, player.position);
+            if (dist <= attackRange + 0.2f) // 살짝 여유 거리
+            {
+                PlayerHealth ph = player.GetComponent<PlayerHealth>();
+                if (ph != null)
+                    ph.TakeDamage(damage);
+            }
         }
 
-        yield return new WaitForSeconds(attackCooldown);
-        agent.isStopped = false;
+        // 나머지 공격 애니메이션 시간 기다림
+        yield return new WaitForSeconds(attackDelay - 0.5f);
+
         isAttacking = false;
     }
 
-    public void TakeDamage(float damage)
+    public void TakeDamage(float dmg)
     {
         if (isDead) return;
 
-        currentHP -= damage;
-        hpSlider.value = currentHP;
-        animator.SetTrigger("Hit");
+        currentHp -= dmg;
+        hpSlider.value = currentHp;
 
-        if (currentHP <= 0)
+        if (currentHp <= 0)
+        {
             Die();
+        }
+        else
+            animator.SetTrigger("Hit");
     }
 
     void Die()
     {
         isDead = true;
         animator.SetTrigger("Die");
-        agent.isStopped = true;
-        StartCoroutine(DieRoutine());
-    }
-
-    IEnumerator DieRoutine()
-    {
-        yield return new WaitForSeconds(2f); // 죽는 애니메이션 길이만큼
-        Destroy(gameObject);
+        Destroy(gameObject, 0.7f);
     }
 }

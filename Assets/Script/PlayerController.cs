@@ -48,20 +48,18 @@ public class PlayerController : MonoBehaviour
     private float attackTimer;
     private float attackCooldownTimer;
 
-    // 총 관련 변수
     [Header("총 설정")]
     public Transform firePoint;
     public GameObject bulletPrefab;
     public int maxAmmo = 10;
     public int currentAmmo;
     public float bulletSpeed = 25f;
+    public float gunFireDelay = 0.4f;
 
-    // 근접 무기 관련
     [Header("근접 무기 히트박스")]
     public Collider fistCollider;
     public Collider swordCollider;
-
-    public float meleeActiveTime = 0.3f; // 타격 판정 유지 시간
+    public float meleeActiveTime = 0.3f;
 
     void Start()
     {
@@ -69,7 +67,6 @@ public class PlayerController : MonoBehaviour
         playerCamera = Camera.main;
         currentAmmo = maxAmmo;
 
-        // 콜라이더 초기 비활성화
         if (fistCollider) fistCollider.enabled = false;
         if (swordCollider) swordCollider.enabled = false;
     }
@@ -117,23 +114,44 @@ public class PlayerController : MonoBehaviour
             attackTimer = weapon.attackDuration;
             attackCooldownTimer = weapon.cooldown;
 
+            //  공격 애니메이션 먼저 재생
+            if (animator != null && !string.IsNullOrEmpty(weapon.attackTriggerName))
+                animator.SetTrigger(weapon.attackTriggerName);
+
+            // 기 타입에 따라 동작 분기
             if (currentWeapon == WeaponType.Gun)
             {
-                TryShootGun(weapon);
+                //총은 애니메이션이 재생된 후 일정 시간 뒤에 발사
+                StartCoroutine(ShootGunAfterAnimation(gunFireDelay));
             }
             else
             {
-                if (animator != null && !string.IsNullOrEmpty(weapon.attackTriggerName))
-                    animator.SetTrigger(weapon.attackTriggerName);
-
-                //  근접 무기 공격
-                if (currentWeapon == WeaponType.Fist)
-                    StartCoroutine(ActivateMeleeHitbox(fistCollider));
-                else if (currentWeapon == WeaponType.Sword)
-                    StartCoroutine(ActivateMeleeHitbox(swordCollider));
+                StartCoroutine(ActivateMeleeHitbox(currentWeapon == WeaponType.Fist ? fistCollider : swordCollider));
             }
         }
     }
+
+    IEnumerator ShootGunAfterAnimation(float delay)
+    {
+        if (currentAmmo <= 0)
+        {
+            Debug.Log("탄환이 없습니다!");
+            yield break;
+        }
+
+        //애니메이션 재생 후 기다림
+        yield return new WaitForSeconds(delay);
+
+        // 총알 생성 시점
+        GameObject bullet = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
+        Rigidbody rb = bullet.GetComponent<Rigidbody>();
+        rb.velocity = firePoint.forward * bulletSpeed;
+        Destroy(bullet, 3f);
+
+        currentAmmo--;
+        Debug.Log($"총 발사! 남은 탄환: {currentAmmo}");
+    }
+
 
     IEnumerator ActivateMeleeHitbox(Collider hitbox)
     {
@@ -142,32 +160,6 @@ public class PlayerController : MonoBehaviour
         hitbox.enabled = true;
         yield return new WaitForSeconds(meleeActiveTime);
         hitbox.enabled = false;
-    }
-
-    void TryShootGun(WeaponData weapon)
-    {
-        if (currentAmmo <= 0)
-        {
-            Debug.Log("탄환이 없습니다!");
-            return;
-        }
-
-        if (animator != null && !string.IsNullOrEmpty(weapon.attackTriggerName))
-            animator.SetTrigger(weapon.attackTriggerName);
-
-        currentAmmo--;
-        Debug.Log($"총 발사! 남은 탄환: {currentAmmo}");
-
-        StartCoroutine(ShootBullet(0.75f));
-    }
-
-    IEnumerator ShootBullet(float delay)
-    {
-        yield return new WaitForSeconds(delay);
-        GameObject bullet = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
-        Rigidbody rb = bullet.GetComponent<Rigidbody>();
-        rb.velocity = firePoint.forward * bulletSpeed;
-        Destroy(bullet, 3f);
     }
 
     void CheckGrounded()
@@ -213,7 +205,8 @@ public class PlayerController : MonoBehaviour
 
     void HandleMovement()
     {
-        if ((isAttacking && !canMoveWhileAttacking) || isLanding)
+        // 🔹 착지 중에도 이동 가능하도록 수정
+        if (isAttacking && !canMoveWhileAttacking)
         {
             currentSpeed = 0;
             return;

@@ -1,0 +1,18 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class MeleeDamage : MonoBehaviour
+{
+    public float damage = 25f;
+
+    private void OnTriggerEnter(Collider other)
+    {
+        // EnemyHealth 컴포넌트를 가진 오브젝트만 피격 처리
+        EnemyController enemy = other.GetComponent<EnemyController>();
+        if (enemy != null)
+        {
+            enemy.TakeDamage(damage);
+        }
+    }
+}
