@@ -15,7 +15,7 @@ public class Destructible : MonoBehaviour
 
         // 사운드 세팅
         audioSource = GetComponent<AudioSource>();
-        Debug.Log("Awake!");
+
         if (audioSource == null && breakSound != null)
         {
             audioSource = gameObject.AddComponent<AudioSource>();
