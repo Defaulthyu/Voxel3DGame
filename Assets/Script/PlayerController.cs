@@ -28,9 +28,14 @@ public class PlayerController : MonoBehaviour
         public float attackDuration;
         public float cooldown;
         public string attackTriggerName;
+
+        //UI 표시용
+        public Sprite icon;
+
     }
 
     public List<WeaponData> weaponDataList;
+    public System.Action<Sprite> OnWeaponIconChanged;
 
     [Header("컴포넌트")]
     public Animator animator;
@@ -95,6 +100,11 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Alpha1)) currentWeapon = WeaponType.Fist;
         if (Input.GetKeyDown(KeyCode.Alpha2)) currentWeapon = WeaponType.Sword;
         if (Input.GetKeyDown(KeyCode.Alpha3)) currentWeapon = WeaponType.Gun;
+
+        // [추가] 현재 무기에 맞는 아이콘 전달
+        WeaponData weapon = weaponDataList.Find(w => w.type == currentWeapon);
+        if (weapon != null && weapon.icon != null)
+            OnWeaponIconChanged?.Invoke(weapon.icon);
     }
 
     void HandleAttack()

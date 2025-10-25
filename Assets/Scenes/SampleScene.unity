@@ -96,7 +96,8 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
-  m_LightingDataAsset: {fileID: 0}
+  m_LightingDataAsset: {fileID: 112000000, guid: 72e7ce80d1b858f4b9ea17b2578def82,
+    type: 2}
   m_LightingSettings: {fileID: 0}
 --- !u!196 &4
 NavMeshSettings:
@@ -781,6 +782,7 @@ MonoBehaviour:
   - {fileID: 864126485}
   - {fileID: 401423946}
   - {fileID: 2085154472}
+  mouseLook: {fileID: 0}
 --- !u!4 &494389174
 Transform:
   m_ObjectHideFlags: 0
@@ -2208,6 +2210,8 @@ MonoBehaviour:
   hpSlider: {fileID: 0}
   animator: {fileID: 0}
   player: {fileID: 0}
+  spawnDuration: 2
+  dieTime: 0.7
 --- !u!54 &1408443395
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -3312,6 +3316,7 @@ MonoBehaviour:
   fistCollider: {fileID: 7091659717210470284}
   swordCollider: {fileID: 0}
   meleeActiveTime: 0.3
+  cam: {fileID: 0}
 --- !u!114 &4960343956427104268
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3326,6 +3331,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mouseSensitivity: 100
   firstPersonCamera: {fileID: 2316364061379104891}
+  playerBody: {fileID: 0}
 --- !u!65 &5209299468391143936
 BoxCollider:
   m_ObjectHideFlags: 0
