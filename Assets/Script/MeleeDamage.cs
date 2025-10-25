@@ -10,10 +10,22 @@ public class MeleeDamage : MonoBehaviour
     {
         // EnemyHealth 컴포넌트를 가진 오브젝트만 피격 처리
         EnemyController enemy = other.GetComponent<EnemyController>();
+        Destructible rock = other.GetComponent<Destructible>();
         if (enemy != null)
         {
-            enemy.TakeDamage(damage);
-            Debug.Log("공격 " + damage);
+            if(enemy)
+            {
+                enemy.TakeDamage(damage);
+                Debug.Log("적 공격 " + damage);
+            }
+        }
+        if(rock != null)
+        {
+            if(rock)
+            {
+                rock.TakeDamage(damage);
+                Debug.Log("문 공격 " + damage);
+            }
         }
 
     }
