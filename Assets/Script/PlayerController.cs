@@ -119,20 +119,53 @@ public class PlayerController : MonoBehaviour
             if (animator != null && !string.IsNullOrEmpty(weapon.attackTriggerName))
                 animator.SetTrigger(weapon.attackTriggerName);
 
-            // 기 타입에 따라 동작 분기
+            //// 기 타입에 따라 동작 분기
+            //if (currentWeapon == WeaponType.Gun)
+            //{
+
+
+            //    //총은 애니메이션이 재생된 후 일정 시간 뒤에 발사
+            //    StartCoroutine(ShootGunAfterAnimation(gunFireDelay));
+            //}
+            //else
+            //{
+            //    StartCoroutine(ActivateMeleeHitbox(currentWeapon == WeaponType.Fist ? fistCollider : swordCollider));
+            //}
+
+            //무기별 동작 분기
             if (currentWeapon == WeaponType.Gun)
             {
-
-
-                //총은 애니메이션이 재생된 후 일정 시간 뒤에 발사
                 StartCoroutine(ShootGunAfterAnimation(gunFireDelay));
             }
             else
             {
-                StartCoroutine(ActivateMeleeHitbox(currentWeapon == WeaponType.Fist ? fistCollider : swordCollider));
+                // 근접 무기는 약간의 딜레이 후 히트박스 활성화
+                float meleeDelay = (currentWeapon == WeaponType.Fist) ? 0.2f : 0.3f;
+                StartCoroutine(ActivateMeleeHitboxWithDelay(
+                    currentWeapon == WeaponType.Fist ? fistCollider : swordCollider,
+                    meleeDelay
+                ));
             }
         }
     }
+
+    IEnumerator ActivateMeleeHitboxWithDelay(Collider hitbox, float delay)
+    {
+        if (hitbox == null) yield break;
+
+        //타격 딜레이 (모션 타이밍 기다림)
+        yield return new WaitForSeconds(delay);
+
+        //히트박스 켜기
+        hitbox.enabled = true;
+        Debug.Log($"[{hitbox.name}] Hitbox ON");
+
+        //일정 시간 유지 후 비활성화
+        yield return new WaitForSeconds(meleeActiveTime);
+        hitbox.enabled = false;
+        Debug.Log($"[{hitbox.name}] Hitbox OFF");
+    }
+
 
     IEnumerator ShootGunAfterAnimation(float delay)
     {
