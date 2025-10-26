@@ -10,6 +10,8 @@ public class CameraSwitcher : MonoBehaviour
     public static bool isFirstPerson = false;
     public MouseLook mouseLook;
 
+    private bool isDead = false;
+
     void Start()
     {
         thirdPersonCam.Priority = 11;
@@ -24,11 +26,21 @@ public class CameraSwitcher : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.V))
+        if(isDead == false)
         {
-            isFirstPerson = !isFirstPerson;
-            SwitchCameraState();
+            if (Input.GetKeyDown(KeyCode.V))
+            {
+                isFirstPerson = !isFirstPerson;
+                SwitchCameraState();
+            }
         }
+
+    }
+
+    public void Die()
+    {
+        isDead = true;
+        SwitchCameraState();
     }
 
     void SwitchCameraState()

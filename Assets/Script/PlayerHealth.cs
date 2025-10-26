@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro.Examples;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -15,8 +16,10 @@ public class PlayerHealth : MonoBehaviour
     public Animator animator;
     public bool isDead = false;
     // Start is called before the first frame update
+    [SerializeField] private CameraSwitcher cameraSwitcher;
     void Start()
     {
+        cameraSwitcher = FindObjectOfType<CameraSwitcher>();
         currentHP = maxHP;
         //hpSlider.value = 1f;
     }
@@ -36,17 +39,31 @@ public class PlayerHealth : MonoBehaviour
 
     void Die()
     {
-        Debug.Log("플레이어 사망");
-        if(animator != null)
+        if(!isDead)
         {
-            animator.SetTrigger("Die");
+            isDead = true;
+
+            Debug.Log("플레이어 사망");
+            if (animator != null)
+            {
+                animator.SetTrigger("Die");
+            }
+
+            if (cameraSwitcher != null)
+            {
+                cameraSwitcher.Die();
+            }
+
+            //움직임 공격 차단
+            PlayerController controller = GetComponent<PlayerController>();
+            if (controller != null) { controller.enabled = false; }
+
+            Invoke(nameof(RestartScene), 1.3f);
         }
-
-        //움직임 공격 차단
-        PlayerController controller = GetComponent<PlayerController>();
-        if(controller != null) { controller.enabled = false; }
-
-        Invoke(nameof(RestartScene), 3f);
+        else
+        {
+            return;
+        }
     }
 
     void RestartScene()

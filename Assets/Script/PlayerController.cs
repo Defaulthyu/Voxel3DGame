@@ -21,6 +21,12 @@ public class PlayerController : MonoBehaviour
     public WeaponType currentWeapon = WeaponType.Fist;
     public enum WeaponType { Fist, Sword, Gun }
 
+    [Header("사운드 설정")]
+    public AudioSource audioSource;
+    public AudioClip gunFireSound;
+    public AudioClip fistHitSound;
+    public AudioClip swordHitSound;
+
     [System.Serializable]
     public class WeaponData
     {
@@ -129,19 +135,6 @@ public class PlayerController : MonoBehaviour
             if (animator != null && !string.IsNullOrEmpty(weapon.attackTriggerName))
                 animator.SetTrigger(weapon.attackTriggerName);
 
-            //// 기 타입에 따라 동작 분기
-            //if (currentWeapon == WeaponType.Gun)
-            //{
-
-
-            //    //총은 애니메이션이 재생된 후 일정 시간 뒤에 발사
-            //    StartCoroutine(ShootGunAfterAnimation(gunFireDelay));
-            //}
-            //else
-            //{
-            //    StartCoroutine(ActivateMeleeHitbox(currentWeapon == WeaponType.Fist ? fistCollider : swordCollider));
-            //}
-
             //무기별 동작 분기
             if (currentWeapon == WeaponType.Gun)
             {
@@ -188,17 +181,16 @@ public class PlayerController : MonoBehaviour
         //애니메이션 재생 후 기다림
         yield return new WaitForSeconds(delay);
 
+        //소리 재생
+        if (audioSource && gunFireSound)
+            audioSource.PlayOneShot(gunFireSound, 2f);
+
         // 총알 생성 시점
         Ray ray = cam.ScreenPointToRay(Input.mousePosition);
         Vector3 targetPoint;
         targetPoint = ray.GetPoint(50f);
         Vector3 direction = (targetPoint - firePoint.position).normalized;
         GameObject bullet = Instantiate(bulletPrefab, firePoint.position, Quaternion.LookRotation(direction));
-
-        //GameObject bullet = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
-        //Rigidbody rb = bullet.GetComponent<Rigidbody>();
-        //rb.velocity = firePoint.forward * bulletSpeed;
-        //Destroy(bullet, 3f);
 
         currentAmmo--;
         Debug.Log($"총 발사! 남은 탄환: {currentAmmo}");

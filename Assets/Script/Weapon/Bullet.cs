@@ -25,7 +25,6 @@ public class BulletDamage : MonoBehaviour
         {
             enemy.TakeDamage(damage);
         }
-        Debug.Log("ÃÑ¾Ë Hit " + damage);
 
         EnemyWizard ew = other.GetComponent<EnemyWizard>();
         if (ew != null)
@@ -33,11 +32,23 @@ public class BulletDamage : MonoBehaviour
             ew.TakeDamage(damage);
         }
 
-        Destructible rock = other.GetComponent<Destructible>();
-        if (rock != null)
+        //Destructible rock = other.GetComponent<Destructible>();
+        //if (rock != null)
+        //{
+        //    rock.TakeDamage(damage);
+        //}
+
+        GolemBossController boss = other.GetComponent<GolemBossController>();
+        if (boss != null)
         {
-            rock.TakeDamage(damage);
+            boss.TakeDamage(damage);
         }
+
+        //BlueJam bj = other.GetComponent<BlueJam>();
+        //if (bj != null)
+        //{
+        //    bj.TakeDamage(damage);
+        //}
 
         Destroy(gameObject); // ÃÑ¾ËÀº ÇÑ ¹ø ¸ÂÀ¸¸é »ç¶óÁü
     }

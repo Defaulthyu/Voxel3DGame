@@ -173,11 +173,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74b2750b4d285444584e94c9d122a738, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHp: 100
+  maxHp: 35
   moveSpeed: 2
   attackRange: 1
   attackDelay: 1.174
-  damage: 10
+  damage: 7
   hpSlider: {fileID: 1018501776848546551}
   animator: {fileID: 7813079412777390236}
   player: {fileID: 0}
@@ -203,9 +203,9 @@ CapsuleCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.3473842
-  m_Height: 1.1482909
+  m_Height: 1.2387594
   m_Direction: 1
-  m_Center: {x: -0.02085352, y: 0.32537115, z: -0.016735315}
+  m_Center: {x: -0.02085352, y: 0.28013688, z: -0.016735315}
 --- !u!54 &5942117953073797722
 Rigidbody:
   m_ObjectHideFlags: 0

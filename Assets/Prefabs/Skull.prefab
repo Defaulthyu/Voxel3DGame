@@ -262,11 +262,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74b2750b4d285444584e94c9d122a738, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHp: 100
+  maxHp: 50
   moveSpeed: 2
   attackRange: 1
   attackDelay: 1.5
-  damage: 10
+  damage: 9
   hpSlider: {fileID: 8513319870778911785}
   animator: {fileID: 5560186667163438783}
   player: {fileID: 0}

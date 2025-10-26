@@ -1,9 +1,12 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Destructible : MonoBehaviour
 {
     public float maxHp = 30f;
+    public Slider hp;
     private float currentHp;
+    public RectTransform rectTransform;
 
     [Header("사운드")]
     public AudioClip breakSound;
@@ -13,6 +16,8 @@ public class Destructible : MonoBehaviour
     {
         currentHp = maxHp;
 
+        hp.value = 1f;
+        hp.value = currentHp / maxHp;
         // 사운드 세팅
         audioSource = GetComponent<AudioSource>();
 
@@ -29,7 +34,13 @@ public class Destructible : MonoBehaviour
     {
         if (currentHp <= 0f) return;
 
+        if(rectTransform != null)
+        {
+            rectTransform.localScale = new Vector3(2.5f, 2.5f, 2.5f);
+        }
+
         currentHp -= damage;
+        hp.value = (float)currentHp / maxHp;
 
         if (currentHp <= 0f)
         {
