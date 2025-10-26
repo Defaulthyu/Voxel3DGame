@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
 
-public class SkeletonMageController : MonoBehaviour
+public class EnemyWizard : MonoBehaviour
 {
     [Header("Ω∫≈»")]
     public float maxHp = 80f;

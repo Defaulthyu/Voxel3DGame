@@ -27,6 +27,18 @@ public class BulletDamage : MonoBehaviour
         }
         Debug.Log("ÃÑ¾Ë Hit " + damage);
 
+        EnemyWizard ew = other.GetComponent<EnemyWizard>();
+        if (ew != null)
+        {
+            ew.TakeDamage(damage);
+        }
+
+        Destructible rock = other.GetComponent<Destructible>();
+        if (rock != null)
+        {
+            rock.TakeDamage(damage);
+        }
+
         Destroy(gameObject); // ÃÑ¾ËÀº ÇÑ ¹ø ¸ÂÀ¸¸é »ç¶óÁü
     }
 }
