@@ -11,7 +11,7 @@ public class TitleUI : MonoBehaviour
 
     public void Play()
     {
-        UnityEngine.SceneManagement.SceneManager.LoadScene("SampleScene");
+        UnityEngine.SceneManagement.SceneManager.LoadScene("Stage_1");
     }
 
     public void Reset()

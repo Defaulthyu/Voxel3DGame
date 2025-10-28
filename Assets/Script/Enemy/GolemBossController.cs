@@ -178,6 +178,11 @@ public class GolemBossController : MonoBehaviour
         if (currentHp <= 0)
         {
             animator.SetTrigger("Die");
+            BossDoor door = FindObjectOfType<BossDoor>();
+            if(door != null)
+            {
+                door.Open();
+            }
             Destroy(gameObject, 2f);
         }
     }
