@@ -40,7 +40,10 @@ public class CameraSwitcher : MonoBehaviour
     public void Die()
     {
         isDead = true;
-        SwitchCameraState();
+        thirdPersonCam.Priority = 11;
+        firstPersonCam.Priority = 10;
+        SetRenderers(true);
+        mouseLook.enabled = false;
     }
 
     void SwitchCameraState()

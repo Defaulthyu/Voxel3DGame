@@ -82,6 +82,7 @@ public class PlayerController : MonoBehaviour
 
         if (fistCollider) fistCollider.enabled = false;
         if (swordCollider) swordCollider.enabled = false;
+        ToggleCursorLock();
     }
 
     void Update()

@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 6149609909442591988}
   - component: {fileID: 2808791204494608819}
   - component: {fileID: 7166766131981618389}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -84,7 +84,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8753189859732413971}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Fill Area
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -121,7 +121,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5191857358046104564}
   - component: {fileID: 1716680063659942517}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Slider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -211,7 +211,7 @@ GameObject:
   - component: {fileID: 2498955652431234797}
   - component: {fileID: 1322513680179405052}
   - component: {fileID: 4024933690210840293}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Fill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -290,7 +290,7 @@ GameObject:
   - component: {fileID: 4259171384984236648}
   - component: {fileID: 6975648052939895175}
   - component: {fileID: 8553087281493404188}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: skullGolem
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -333,8 +333,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 6.4203005, y: 7.074171, z: 3.1370125}
-  m_Center: {x: 0.056661606, y: -0.2173034, z: -0.20503044}
+  m_Size: {x: 6.4203005, y: 7.074171, z: 2.8172822}
+  m_Center: {x: 0.056661606, y: -0.21730328, z: 0.49268872}
 --- !u!54 &4473457103128570252
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -357,10 +357,10 @@ Rigidbody:
     m_Bits: 0
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 0
+  m_UseGravity: 0
+  m_IsKinematic: 1
   m_Interpolate: 0
-  m_Constraints: 64
+  m_Constraints: 0
   m_CollisionDetection: 0
 --- !u!114 &8479521967783442612
 MonoBehaviour:
@@ -376,11 +376,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHp: 100
   moveSpeed: 3
-  attackRange: 5
-  jumpCooldown: 20
+  attackRange: 4
+  jumpCooldown: 10
   slamDamage: 10
+  slamRange: 5
   attackDamage: 20
-  attackCooldown: 3
+  attackCooldown: 1.5
   spawnTime: 2
   hpSlider: {fileID: 1716680063659942517}
   animator: {fileID: 3667271238838893470}
@@ -688,7 +689,7 @@ GameObject:
   - component: {fileID: 3889903125408835189}
   - component: {fileID: 7884183751001871095}
   - component: {fileID: 467847154312343926}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -791,6 +792,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: skullGolem
       objectReference: {fileID: 0}
+    - target: {fileID: -7981514964708312862, guid: e40d83ebc1446654c93a2acd4a7fd7cd,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: -6601043233671942095, guid: e40d83ebc1446654c93a2acd4a7fd7cd,
         type: 3}
       propertyPath: m_LocalScale.x
@@ -855,6 +861,86 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -6593776838498959796, guid: e40d83ebc1446654c93a2acd4a7fd7cd,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: -4933634181773779699, guid: e40d83ebc1446654c93a2acd4a7fd7cd,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: -2703221156455381077, guid: e40d83ebc1446654c93a2acd4a7fd7cd,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: -2632589061993570500, guid: e40d83ebc1446654c93a2acd4a7fd7cd,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: -949861816651734640, guid: e40d83ebc1446654c93a2acd4a7fd7cd,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: -914535179883631447, guid: e40d83ebc1446654c93a2acd4a7fd7cd,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 683601726358986060, guid: e40d83ebc1446654c93a2acd4a7fd7cd,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 1408168138621784691, guid: e40d83ebc1446654c93a2acd4a7fd7cd,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 2230955869299528167, guid: e40d83ebc1446654c93a2acd4a7fd7cd,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 3222478774226311717, guid: e40d83ebc1446654c93a2acd4a7fd7cd,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 3845115058750280338, guid: e40d83ebc1446654c93a2acd4a7fd7cd,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 7594086200757661922, guid: e40d83ebc1446654c93a2acd4a7fd7cd,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 7693711173275067748, guid: e40d83ebc1446654c93a2acd4a7fd7cd,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 8785273993891442820, guid: e40d83ebc1446654c93a2acd4a7fd7cd,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 8855596623887250836, guid: e40d83ebc1446654c93a2acd4a7fd7cd,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 8886351727441253693, guid: e40d83ebc1446654c93a2acd4a7fd7cd,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 8914207829204841315, guid: e40d83ebc1446654c93a2acd4a7fd7cd,
         type: 3}

@@ -10,6 +10,7 @@ public class GolemBossController : MonoBehaviour
     public float attackRange = 3f;
     public float jumpCooldown = 8f;
     public float slamDamage = 40f;
+    public float slamRange = 7f;
     public float attackDamage = 20f;
 
     public float attackCooldown = 3f;
@@ -93,6 +94,12 @@ public class GolemBossController : MonoBehaviour
             player.GetComponent<PlayerHealth>()?.TakeDamage(attackDamage);
             attackSound.Play();
         }
+        //Y보정 (바닥은 y=0으로 가정)
+        Vector3 pos = transform.position;
+        // 착지 후 Y보정 (바닥은 y=0으로 가정)
+
+        pos.y = 0f; // 또는 골렘의 기본 바닥 높이 (예: 1.8f)
+        transform.position = pos;
 
         yield return new WaitForSeconds(attackCooldown);
         canAttack = true;
@@ -139,7 +146,7 @@ public class GolemBossController : MonoBehaviour
         );
 
         // 범위 데미지
-        Collider[] hitPlayers = Physics.OverlapSphere(transform.position, 5f);
+        Collider[] hitPlayers = Physics.OverlapSphere(transform.position, slamRange);
         foreach (var hit in hitPlayers)
         {
             if (hit.CompareTag("Player"))
@@ -150,6 +157,10 @@ public class GolemBossController : MonoBehaviour
         float stopTime = 5f;
         float timer = 0f;
         animator.SetTrigger("Slam");
+        // 착지 후 Y보정 (바닥은 y=0으로 가정)
+        Vector3 pos = transform.position;
+        pos.y = 0f; // 또는 골렘의 기본 바닥 높이 (예: 1.8f)
+        transform.position = pos;
         while (timer < stopTime)
         {
             timer += Time.deltaTime;
@@ -170,4 +181,12 @@ public class GolemBossController : MonoBehaviour
             Destroy(gameObject, 2f);
         }
     }
+
+    //void LateUpdate()
+    //{
+    //    Vector3 rot = transform.eulerAngles;
+    //    rot.x = 0f;
+    //    rot.z = 0f;
+    //    transform.eulerAngles = rot;
+    //}
 }
