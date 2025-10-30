@@ -932,10 +932,25 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5621292581829522735, guid: 37847b89f6b55af4db2f06ae5f04a8f0,
+        type: 3}
+      propertyPath: fadeImage
+      value: 
+      objectReference: {fileID: 1695296871}
+    - target: {fileID: 5621292581829522735, guid: 37847b89f6b55af4db2f06ae5f04a8f0,
+        type: 3}
+      propertyPath: sceneName
+      value: Stage_3
+      objectReference: {fileID: 0}
     - target: {fileID: 5896418594310722080, guid: 37847b89f6b55af4db2f06ae5f04a8f0,
         type: 3}
       propertyPath: m_Name
       value: SceneTrigger
+      objectReference: {fileID: 0}
+    - target: {fileID: 6842375744172227995, guid: 37847b89f6b55af4db2f06ae5f04a8f0,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
