@@ -292,7 +292,7 @@ GameObject:
   - component: {fileID: 8553087281493404188}
   m_Layer: 6
   m_Name: skullGolem
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -333,8 +333,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 6.4203005, y: 7.074171, z: 2.8172822}
-  m_Center: {x: 0.056661606, y: -0.21730328, z: 0.49268872}
+  m_Size: {x: 6.4203005, y: 7.074171, z: 2.3910503}
+  m_Center: {x: 0.056661606, y: -0.21730328, z: -0.05}
 --- !u!54 &4473457103128570252
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -374,11 +374,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29dfeb4b7583d694e92f92fef9056b09, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHp: 100
+  maxHp: 300
   moveSpeed: 3
   attackRange: 4
   jumpCooldown: 10
-  slamDamage: 10
+  slamDamage: 30
   slamRange: 5
   attackDamage: 20
   attackCooldown: 1.5

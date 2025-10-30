@@ -382,7 +382,7 @@ MonoBehaviour:
   firePoint: {fileID: 4933784692439658825}
   bulletPrefab: {fileID: 8175174464169580334, guid: 0dd66dae13337fa4a82f84be401e0e81,
     type: 3}
-  maxAmmo: 25
+  maxAmmo: 5
   currentAmmo: 0
   bulletSpeed: 25
   gunFireDelay: 0.75

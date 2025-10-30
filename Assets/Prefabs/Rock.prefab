@@ -337,7 +337,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 95df824e83e0da143a7da398d22ce2be, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHp: 30
+  maxHp: 20
   hp: {fileID: 6828886660225729481}
   rectTransform: {fileID: 6408787258530847123}
   breakSound: {fileID: 8300000, guid: d0a216077bc4f1f409d470e06f671f7a, type: 3}
