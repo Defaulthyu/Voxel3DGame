@@ -34,7 +34,13 @@ public class Destructible : MonoBehaviour
     {
         if (currentHp <= 0f) return;
 
-        if(rectTransform != null)
+        int aliveEnemies = CountAliveEnemiesByTag("Enemy");
+        if (aliveEnemies > 0)
+        {
+            return;
+        }
+
+        if (rectTransform != null)
         {
             rectTransform.localScale = new Vector3(2.5f, 2.5f, 2.5f);
         }
@@ -46,6 +52,17 @@ public class Destructible : MonoBehaviour
         {
             Break();
         }
+    }
+
+    int CountAliveEnemiesByTag(string tag)
+    {
+        GameObject[] enemies = GameObject.FindGameObjectsWithTag(tag);
+        int cnt = 0;
+        foreach (var e in enemies)
+        {
+            if (e.activeInHierarchy) cnt++;
+        }
+        return cnt;
     }
 
     void Break()
